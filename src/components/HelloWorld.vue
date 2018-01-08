@@ -17,14 +17,13 @@ export default {
     const gl = webgl(canvas)
     this.gl = gl
 
-    this.clear()
-    this.step()
+    requestAnimationFrame(this.tick)
   },
 
   methods: {
-    step() {
+    tick() {
       this.draw()
-      requestAnimationFrame(this.step)
+      requestAnimationFrame(this.tick)
     },
 
     clear() {
@@ -39,28 +38,34 @@ export default {
 
       const aPosition = gl.getAttribLocation(gl.program, 'a_Position')
       const aPointSize = gl.getAttribLocation(gl.program, 'a_PointSize')
+      const aColor = gl.getAttribLocation(gl.program, 'a_Color')
       const uFragColor = gl.getUniformLocation(gl.program, 'u_FragColor')
       const uXformMatrix = gl.getUniformLocation(gl.program, 'u_xfromMatrix')
 
       const {x, y} = this
       const t = Date.now() / 100
       const vertices = new Float32Array([
-        0.0, 0.0, x - 0.3 * Math.sin(t), y - 0.3 * Math.cos(t), x + 0.3 * Math.sin(t), y + 0.3 * Math.cos(t)
+        0.0, 0.0, 1.0, 1.0, 1.0,
+        x - 0.3 * Math.sin(t), y - 0.3 * Math.cos(t), 1.0, 0.0, 1.0,
+        x + 0.3 * Math.sin(t), y + 0.3 * Math.cos(t), 0.0, 1.0, 1.0
       ])
+      const FSIZE = vertices.BYTES_PER_ELEMENT
 
       const vertexBuffer = gl.createBuffer()
       gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
       gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW)
-      gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0)
+      gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, FSIZE * 5, 0)
+      gl.vertexAttribPointer(aColor, 3, gl.FLOAT, false, FSIZE * 5, FSIZE * 2)
       gl.enableVertexAttribArray(aPosition)
+      gl.enableVertexAttribArray(aColor)
 
       // gl.vertexAttrib3f(aPosition, this.x, this.y, 0.0)
       gl.vertexAttrib1f(aPointSize, 20.0)
       // gl.uniform4f(uFragColor, Math.random(), Math.random(), Math.random(), Math.random())
       gl.uniform4f(uFragColor, 0.0, 0.0, 0.0, 1.0)
       const xformMatrix = new Matrix4()
-      xformMatrix.setRotate(90, 0, 0, 1)
-      // xformMatrix.translate(0.5, 0, 0)
+      xformMatrix.setRotate(0, 0, 0, 1)
+      xformMatrix.scale(1.5, 1, 1)
       // console.log(xformMatrix.elements)
       gl.uniformMatrix4fv(uXformMatrix, false, xformMatrix.elements)
 
