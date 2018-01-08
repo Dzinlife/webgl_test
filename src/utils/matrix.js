@@ -1,5 +1,5 @@
 // cuon-matrix.js (c) 2012 kanda and matsuda
-/** 
+/**
  * This is a class treating 4x4 matrix.
  * This class contains the function that is equivalent to OpenGL matrix stack.
  * The matrix after conversion is calculated by multiplying a conversion matrix from the right.
@@ -12,19 +12,26 @@
  * Otherwise, new matrix is initialized by identity matrix.
  * @param opt_src source matrix(option)
  */
-var Matrix4 = function(opt_src) {
-  var i, s, d;
-  if (opt_src && typeof opt_src === 'object' && opt_src.hasOwnProperty('elements')) {
-    s = opt_src.elements;
-    d = new Float32Array(16);
+const Matrix4 = function(optSrc) {
+  var i, s, d
+  if (optSrc && typeof optSrc === 'object' && optSrc.hasOwnProperty('elements')) {
+    s = optSrc.elements
+    d = new Float32Array(16)
     for (i = 0; i < 16; ++i) {
-      d[i] = s[i];
+      d[i] = s[i]
     }
-    this.elements = d;
+    this.elements = d
   } else {
-    this.elements = new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]);
+    this.elements = new Float32Array(
+      [
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+      ]
+    )
   }
-};
+}
 
 /**
  * Set the identity matrix.
@@ -739,3 +746,5 @@ var Vector4 = function(opt_src) {
   } 
   this.elements = v;
 }
+
+export default Matrix4
