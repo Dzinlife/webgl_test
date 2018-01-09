@@ -11,6 +11,8 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "physijs": "0.0.4",
+    "three": "^0.89.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },
